@@ -29,25 +29,30 @@ class App extends Component {
     super();
     this.state = {
       input: '',
+      imageUrl: '',
     };
   }
 
-  onInputChange = (event) => {
-    console.log(event.target.value);
+  onInputChange = event => {
+    this.setState({ input: event.target.value });
   };
 
   onButtonSubmit = () => {
     console.log('click');
+    this.setState({ imageUrl: this.state.input });
+
     app.models
       .predict(
-        Clarifai.COLOR_MODEL,
-        // THE JPG
-        'https://i.insider.com/5d321d4ea209d3146d650b4a?width=1100&format=jpeg&auto=webp',
+        Clarifai.FACE_DETECT_MODEL,
+        // THE JPG; use this.state.input; if using imageUrl, will get error
+        this.state.input
       )
-      .then((response) => {
-        console.log(response);
+      .then(response => {
+        console.log(
+          response.outputs[0].data.regions[0].region_info.bounding_box
+        );
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
@@ -63,7 +68,7 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        <FaceRecognition />
+        <FaceRecognition imageUrl={this.state.imageUrl} />
       </div>
     );
   }
