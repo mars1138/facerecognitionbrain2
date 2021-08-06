@@ -97,11 +97,24 @@ class App extends Component {
       .predict(
         Clarifai.FACE_DETECT_MODEL,
         // THE JPG; use this.state.input; if using imageUrl, will get error if setState has not updated imageUrl at this point
-        this.state.input
+        this.state.input,
       )
-      .then(response =>
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      )
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: this.state.user.id,
+            }),
+          })
+            .then(res => res.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count }));
+            });
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response));
+      })
       .catch(err => console.log(err));
   };
 
