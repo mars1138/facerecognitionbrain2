@@ -84,6 +84,7 @@ class Signin extends Component {
                 Register
               </p>
             </div>
+            <div className="mt3">&nbsp;</div>
           </div>
         </main>
       </article>
