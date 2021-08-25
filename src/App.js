@@ -8,7 +8,7 @@ import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
+// import Clarifai from 'clarifai'; // moved to backend
 
 const particlesOptions = {
   particles: {
@@ -21,10 +21,6 @@ const particlesOptions = {
     },
   },
 };
-
-const app = new Clarifai.App({
-  apiKey: '3fed091650b6444a98384f167efe87aa',
-});
 
 const initialState = {
   input: '',
@@ -95,13 +91,16 @@ class App extends Component {
     console.log('click');
     this.setState({ imageUrl: this.state.input });
 
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        // THE JPG; use this.state.input; if using imageUrl, will get error if setState has not updated imageUrl at this point
-        this.state.input
-      )
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input,
+      }),
+    })
+      .then(response => response.json())
       .then(response => {
+        console.log('imageurl response: ', response);
         if (response) {
           fetch('http://localhost:3000/image', {
             method: 'put',
