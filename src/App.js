@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Logo from './components/Logo/Logo';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
@@ -136,7 +135,7 @@ class App extends Component {
   render() {
     const { isSignedIn, route, box, imageUrl, user } = this.state;
     return (
-      <div className="App">
+      <div className="App pa1">
         <Particles className="particles" params={particlesOptions} />
         <Navigation
           isSignedIn={isSignedIn}
@@ -144,7 +143,7 @@ class App extends Component {
         />
         {route === 'home' ? (
           <div>
-            <Logo />
+            
             <Rank name={user.name} entries={user.entries} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
