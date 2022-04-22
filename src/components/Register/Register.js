@@ -10,13 +10,13 @@ class Register extends Component {
     };
   }
 
-  onNameChange = event => {
+  onNameChange = (event) => {
     this.setState({ name: event.target.value });
   };
-  onEmailChange = event => {
+  onEmailChange = (event) => {
     this.setState({ email: event.target.value });
   };
-  onPasswordChange = event => {
+  onPasswordChange = (event) => {
     this.setState({ password: event.target.value });
   };
 
@@ -30,8 +30,8 @@ class Register extends Component {
         password: this.state.password,
       }),
     })
-      .then(res => res.json())
-      .then(user => {
+      .then((res) => res.json())
+      .then((user) => {
         if (user.id) {
           this.props.loadUser(user);
           this.props.onRouteChange('home');
@@ -41,7 +41,7 @@ class Register extends Component {
 
   render() {
     return (
-      <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+      <article className="br3-ns bg-white-90 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
         <main className="pa4 black-80">
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -86,7 +86,7 @@ class Register extends Component {
             <div className="">
               <input
                 onClick={this.onSubmitSignIn}
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib br2"
+                className="b ph3 pv2 input-reset ba b--black-80 bg-transparent hover-bg-light-purple black-80 grow pointer f6 dib br2"
                 type="submit"
                 value="Register"
               />

@@ -9,10 +9,10 @@ class Signin extends Component {
     };
   }
 
-  onEmailChange = event => {
+  onEmailChange = (event) => {
     this.setState({ signInEmail: event.target.value });
   };
-  onPasswordChange = event => {
+  onPasswordChange = (event) => {
     this.setState({ signInPassword: event.target.value });
   };
 
@@ -25,8 +25,8 @@ class Signin extends Component {
         password: this.state.signInPassword,
       }),
     })
-      .then(res => res.json())
-      .then(user => {
+      .then((res) => res.json())
+      .then((user) => {
         if (user.id) {
           this.props.onRouteChange('home');
           this.props.loadUser(user);
@@ -38,7 +38,7 @@ class Signin extends Component {
     const { onRouteChange } = this.props;
 
     return (
-      <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+      <article className="br3-ns bg-white-90 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
         <main className="pa4 black-80">
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -71,7 +71,7 @@ class Signin extends Component {
             <div className="">
               <input
                 onClick={this.onSubmitSignIn}
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib br2"
+                className="b ph3 pv2 input-reset ba black-80 b--black-80 hover-bg-light-purple grow pointer f6 dib br2"
                 type="submit"
                 value="Sign in"
               />
@@ -79,7 +79,7 @@ class Signin extends Component {
             <div className="lh-copy mt3">
               <p
                 onClick={() => onRouteChange('register')}
-                className="f6 link dim black db pointer"
+                className="f6 link dim black-80 db pointer"
               >
                 Register
               </p>

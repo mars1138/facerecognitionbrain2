@@ -6,20 +6,20 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
-import Particles from 'react-particles-js';
+// import Particles from 'react-particles-js';
 // import Clarifai from 'clarifai'; // moved to backend
 
-const particlesOptions = {
-  particles: {
-    number: {
-      value: 20,
-      density: {
-        enable: true,
-        value_area: 300,
-      },
-    },
-  },
-};
+// const particlesOptions = {
+//   particles: {
+//     number: {
+//       value: 20,
+//       density: {
+//         enable: true,
+//         value_area: 300,
+//       },
+//     },
+//   },
+// };
 
 const initialState = {
   input: '',
@@ -49,7 +49,7 @@ class App extends Component {
   //     .then(console.log); // syntax allows for logging data to console without specifying
   // }
 
-  loadUser = data => {
+  loadUser = (data) => {
     this.setState({
       user: {
         id: data.id,
@@ -61,7 +61,7 @@ class App extends Component {
     });
   };
 
-  calculateFaceLocation = data => {
+  calculateFaceLocation = (data) => {
     console.log(data.outputs[0].data.regions[0].region_info.bounding_box);
     const cBox = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputImage');
@@ -77,12 +77,12 @@ class App extends Component {
     };
   };
 
-  displayFaceBox = box => {
+  displayFaceBox = (box) => {
     console.log('face box', box);
     this.setState({ box });
   };
 
-  onInputChange = event => {
+  onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
 
@@ -100,8 +100,8 @@ class App extends Component {
           input: this.state.input,
         }),
       })
-        .then(response => response.json())
-        .then(response => {
+        .then((response) => response.json())
+        .then((response) => {
           console.log('imageurl response: ', response);
           if (response) {
             fetch('https://fathomless-everglades-39473.herokuapp.com/image', {
@@ -111,8 +111,8 @@ class App extends Component {
                 id: this.state.user.id,
               }),
             })
-              .then(res => res.json())
-              .then(count => {
+              .then((res) => res.json())
+              .then((count) => {
                 this.setState(
                   Object.assign(this.state.user, { entries: count })
                 );
@@ -121,11 +121,11 @@ class App extends Component {
           }
           this.displayFaceBox(this.calculateFaceLocation(response));
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
 
-  onRouteChange = route => {
+  onRouteChange = (route) => {
     if (route === 'signout') this.setState(initialState);
     else if (route === 'home') this.setState({ isSignedIn: true });
 
@@ -135,15 +135,14 @@ class App extends Component {
   render() {
     const { isSignedIn, route, box, imageUrl, user } = this.state;
     return (
-      <div className="App pa1">
-        <Particles className="particles" params={particlesOptions} />
+      <div className="App pb1">
+        {/* <Particles className="particles" params={particlesOptions} /> */}
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
         />
         {route === 'home' ? (
           <div>
-            
             <Rank name={user.name} entries={user.entries} />
             <ImageLinkForm
               onInputChange={this.onInputChange}
