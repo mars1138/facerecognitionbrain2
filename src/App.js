@@ -6,20 +6,6 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
-// import Particles from 'react-particles-js';
-// import Clarifai from 'clarifai'; // moved to backend
-
-// const particlesOptions = {
-//   particles: {
-//     number: {
-//       value: 20,
-//       density: {
-//         enable: true,
-//         value_area: 300,
-//       },
-//     },
-//   },
-// };
 
 const initialState = {
   input: '',
@@ -41,13 +27,6 @@ class App extends Component {
     super();
     this.state = initialState;
   }
-
-  // TESTING for connection to root route
-  // componentDidMount() {
-  //   fetch('http://localhost:3000/')
-  //     .then(res => res.json())
-  //     .then(console.log); // syntax allows for logging data to console without specifying
-  // }
 
   loadUser = (data) => {
     this.setState({
@@ -93,7 +72,7 @@ class App extends Component {
     if (this.state.input === initialState.input) {
       return console.log('No URL entered!');
     } else {
-      fetch('https://fathomless-everglades-39473.herokuapp.com/imageurl', {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/imageurl`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -104,7 +83,7 @@ class App extends Component {
         .then((response) => {
           console.log('imageurl response: ', response);
           if (response) {
-            fetch('https://fathomless-everglades-39473.herokuapp.com/image', {
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
               method: 'put',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -136,7 +115,6 @@ class App extends Component {
     const { isSignedIn, route, box, imageUrl, user } = this.state;
     return (
       <div className="App pb1">
-        {/* <Particles className="particles" params={particlesOptions} /> */}
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}

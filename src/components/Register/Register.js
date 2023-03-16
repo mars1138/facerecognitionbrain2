@@ -21,7 +21,7 @@ class Register extends Component {
   };
 
   onSubmitSignIn = () => {
-    fetch('https://fathomless-everglades-39473.herokuapp.com/register', {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/register`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

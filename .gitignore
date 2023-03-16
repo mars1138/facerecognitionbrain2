@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+app-OLD.js
 
 # production
 /build
