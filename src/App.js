@@ -6,11 +6,12 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 
 const initialState = {
   input: '',
   imageUrl: '',
-  box: {},
+  boxes: [],
   route: 'signin',
   isSignedIn: false,
   user: {
@@ -20,6 +21,7 @@ const initialState = {
     entries: 0,
     joined: '',
   },
+  isLoading: false,
 };
 
 class App extends Component {
@@ -41,32 +43,40 @@ class App extends Component {
   };
 
   calculateFaceLocation = (data) => {
-    console.log(data.outputs[0].data.regions[0].region_info.bounding_box);
-    const cBox = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById('inputImage');
-    const width = Number(image.width);
-    const height = Number(image.height);
-    console.log(`${width} W x ${height} H`);
+    const boxArray = [];
 
-    return {
-      left: cBox.left_col * width,
-      top: cBox.top_row * height,
-      right: width - cBox.right_col * width,
-      bottom: height - cBox.bottom_row * height,
-    };
+    data.outputs[0].data.regions.forEach((region) => {
+      const cBox = region.region_info.bounding_box;
+      const image = document.getElementById('inputImage');
+      const width = Number(image.width);
+      const height = Number(image.height);
+      // console.log(`${width} W x ${height} H`);
+
+      boxArray.push({
+        left: cBox.left_col * width,
+        top: cBox.top_row * height,
+        right: width - cBox.right_col * width,
+        bottom: height - cBox.bottom_row * height,
+      });
+    });
+
+    return boxArray;
   };
 
-  displayFaceBox = (box) => {
-    console.log('face box', box);
-    this.setState({ box });
+  displayFaceBox = (boxArray) => {
+    this.setState({ boxes: boxArray });
   };
 
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
 
+  onToggleIsLoading = () => {
+    const newState = this.state.isLoading ? false : true;
+    this.setState({ isLoading: newState });
+  };
+
   onButtonSubmit = () => {
-    console.log('click');
     this.setState({ imageUrl: this.state.input });
 
     if (this.state.input === initialState.input) {
@@ -81,7 +91,6 @@ class App extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log('imageurl response: ', response);
           if (response) {
             fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
               method: 'put',
@@ -112,9 +121,10 @@ class App extends Component {
   };
 
   render() {
-    const { isSignedIn, route, box, imageUrl, user } = this.state;
+    const { isSignedIn, route, boxes, imageUrl, user } = this.state;
     return (
       <div className="App pb1">
+        {this.state.isLoading && <LoadingSpinner />}
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
@@ -126,14 +136,19 @@ class App extends Component {
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
             />
-            <FaceRecognition box={box} imageUrl={imageUrl} />
+            <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
           </div>
         ) : route === 'signin' ? (
-          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+          <Signin
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+            toggleSpinner={this.onToggleIsLoading}
+          />
         ) : (
           <Register
             loadUser={this.loadUser}
             onRouteChange={this.onRouteChange}
+            toggleSpinner={this.onToggleIsLoading}
           />
         )}
       </div>

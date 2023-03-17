@@ -7,6 +7,7 @@ class Register extends Component {
       name: '',
       email: '',
       password: '',
+      error: '',
     };
   }
 
@@ -21,6 +22,8 @@ class Register extends Component {
   };
 
   onSubmitSignIn = () => {
+    this.props.toggleSpinner();
+
     fetch(`${process.env.REACT_APP_BACKEND_URL}/register`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -31,11 +34,19 @@ class Register extends Component {
       }),
     })
       .then((res) => res.json())
-      .then((user) => {
-        if (user.id) {
-          this.props.loadUser(user);
+      .then((data) => {
+        if (data.id) {
+          this.props.loadUser(data);
           this.props.onRouteChange('home');
+        } else {
+          console.log(data);
+          this.setState({ error: data });
         }
+        this.props.toggleSpinner();
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.toggleSpinner();
       });
   };
 
@@ -91,6 +102,11 @@ class Register extends Component {
                 value="Register"
               />
             </div>
+            {this.state.error && (
+              <div>
+                <p className="red b">{this.state.error}</p>
+              </div>
+            )}
           </div>
         </main>
       </article>

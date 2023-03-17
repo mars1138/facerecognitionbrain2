@@ -6,6 +6,7 @@ class Signin extends Component {
     this.state = {
       signInEmail: '',
       signInPassword: '',
+      error: '',
     };
   }
 
@@ -17,6 +18,8 @@ class Signin extends Component {
   };
 
   onSubmitSignIn = () => {
+    this.props.toggleSpinner();
+
     fetch(`${process.env.REACT_APP_BACKEND_URL}/signin`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -26,11 +29,18 @@ class Signin extends Component {
       }),
     })
       .then((res) => res.json())
-      .then((user) => {
-        if (user.id) {
+      .then((data) => {
+        if (data.id) {
           this.props.onRouteChange('home');
-          this.props.loadUser(user);
+          this.props.loadUser(data);
+        } else {
+          this.setState({ error: data });
         }
+        this.props.toggleSpinner();
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.toggleSpinner();
       });
   };
 
@@ -85,6 +95,11 @@ class Signin extends Component {
               </p>
             </div>
             <div className="mt3">&nbsp;</div>
+            {this.state.error && (
+              <div>
+                <p className="red b">{this.state.error}</p>
+              </div>
+            )}
           </div>
         </main>
       </article>
